@@ -15,7 +15,7 @@ var app = express();
 app.use(helmet());
 
 app.use(helmet.hidePoweredBy({setTo: 'PHP 4.2.0'}));
-app.use(helmet.noCache());
+// app.use(helmet.noCache());
 
 app.use('/public', express.static(process.cwd() + '/public'));
 
@@ -42,10 +42,12 @@ app.use(function(req, res, next) {
     .type('text')
     .send('Not Found');
 });
-
+const MONGODB_CONNECTION_STRING = process.env.DB;
 //Start our server and tests!
 app.listen(8000, function () {
   console.log("Listening on port " + 8000);
+  // console.log(MONGODB_CONNECTION_STRING );
+  
   if(process.env.NODE_ENV==='test') {
     console.log('Running Tests...');
     setTimeout(function () {
