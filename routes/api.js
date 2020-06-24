@@ -22,6 +22,20 @@ module.exports = function (app) {
     .get(function (req, res){
       //response will be array of book objects
       //json res format: [{"_id": bookid, "title": book_title, "commentcount": num_of_comments },...]
+      MongoClient.connect(MONGODB_CONNECTION_STRING, (err, client) => {
+        let db = client.db('books');
+        db.collection('books')
+        .find({})
+        .toArray((err, docs) => {
+          let result;
+          results = docs.map((ele, i, arr) => {
+            let obj = {};
+            obj._id = arr[i].comments? 0 : arr[i].comments.length;
+            return obj;
+          })
+          res.json(result)
+        })
+      })
     })
     
     .post(function (req, res){
