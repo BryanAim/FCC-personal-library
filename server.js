@@ -7,9 +7,15 @@ var cors        = require('cors');
 var apiRoutes         = require('./routes/api.js');
 var fccTestingRoutes  = require('./routes/fcctesting.js');
 var runner            = require('./test-runner');
+const helmet = require('helmet');
 require('dotenv').config();
 
 var app = express();
+
+app.use(helmet());
+
+app.use(helmet.hidePoweredBy({setTo: 'PHP 4.2.0'}));
+app.use(helmet.noCache());
 
 app.use('/public', express.static(process.cwd() + '/public'));
 
@@ -38,8 +44,8 @@ app.use(function(req, res, next) {
 });
 
 //Start our server and tests!
-app.listen(process.env.PORT || 3000, function () {
-  console.log("Listening on port " + process.env.PORT);
+app.listen(8000, function () {
+  console.log("Listening on port " + 8000);
   if(process.env.NODE_ENV==='test') {
     console.log('Running Tests...');
     setTimeout(function () {
