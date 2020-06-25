@@ -93,23 +93,26 @@ module.exports = function (app) {
     .post(function(req, res){
       var bookid = req.params.id;
       var comment = req.body.comment;
+      var update = { comments: [] };
       //json res format same as .get
+
+      if (!bookid) {  
+        res.send('no id given')
+      }
+      if (!comment) {
+        res.send('no comment provided')
+      }
+
       MongoClient.connect(MONGODB_CONNECTION_STRING, (err, client) => {
 
-        let book = {
-          // bookTitle: title,
-          // _id: _id,
-          comment: comment
-        }
         let db =client.db('personal-library');
 
-        db.collection('book').insertOne(book, function(err, doc) {
-          if (err) {
-            console.log("error", err);
-            
-          } else {
-            res.json(book)
-          }
+        db.collection('books').findAndModify({_id: ObjectId(bookid)},
+        {},
+        {$push: { comments: comment}},
+        {new: true},
+        (err, doc) => {
+          (err) ?  res.send('comment adding was unsuccessful') : res.json(doc.value);
         })
       })
     })
