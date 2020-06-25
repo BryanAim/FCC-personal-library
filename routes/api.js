@@ -88,6 +88,15 @@ module.exports = function (app) {
     .get(function (req, res){
       var bookid = req.params.id;
       //json res format: {"_id": bookid, "title": book_title, "comments": [comment,comment,...]}
+      var bookid = req.params.id;
+      MongoClient.connect(MONGODB_CONNECTION_STRING, (err, client)=> {
+        let db = client.db('personal-library');
+
+        db.collection('books').find({_id: ObjectId(bookid)}).toArray((err, doc)=>{
+          expect(err, 'error').to.not.exist;
+          doc.length === 0 ? res.send('sorry that book does not exist') : res.json(doc[0])
+        })
+      })
     })
     
     .post(function(req, res){
