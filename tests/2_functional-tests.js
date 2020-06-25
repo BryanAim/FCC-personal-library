@@ -10,6 +10,7 @@ var chaiHttp = require('chai-http');
 var chai = require('chai');
 var assert = chai.assert;
 var server = require('../server');
+const { get } = require('../server');
 
 chai.use(chaiHttp);
 
@@ -71,6 +72,15 @@ suite('Functional Tests', function() {
     suite('GET /api/books => array of books', function(){
       
       test('Test GET /api/books',  function(done){
+        chai.request(server)
+        get('/api/books')
+        .query({})
+        .end((err, res)=> {
+          assert.equal(res.status, 200);
+          assert.isArray(res.body);
+          id = res.body[0]._id;
+          done();
+        })
         //done();
       });      
       
