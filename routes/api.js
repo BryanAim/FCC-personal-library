@@ -27,10 +27,14 @@ module.exports = function (app) {
         db.collection('books')
         .find({})
         .toArray((err, docs) => {
+
           let result;
-          results = docs.map((ele, i, arr) => {
+
+          result = docs.map((ele, i, arr) => {
             let obj = {};
-            obj._id = arr[i].comments? 0 : arr[i].comments.length;
+            obj._id = arr[i]._id;
+            obj.title = arr[i].title;
+            obj.commentcount = !arr[i].comments ? 0 : arr[i].comments.length;
             return obj;
           })
           res.json(result)
@@ -129,6 +133,13 @@ module.exports = function (app) {
     .delete(function(req, res){
       var bookid = req.params.id;
       //if successful response will be 'delete successful'
+      MongoClient.connect(MONGODB_CONNECTION_STRING, (err, client) => {
+        let db = client.db('personal-library');
+
+        db.collection('books').remove({_id: ObjectId(bookid)}, (err, doc) => {
+          (err) ? res.send('delete unsuccessful') : res.send('delete successful');
+        })
+      })
     });
   
 };
