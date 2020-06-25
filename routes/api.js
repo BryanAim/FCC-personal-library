@@ -23,7 +23,7 @@ module.exports = function (app) {
       //response will be array of book objects
       //json res format: [{"_id": bookid, "title": book_title, "commentcount": num_of_comments },...]
       MongoClient.connect(MONGODB_CONNECTION_STRING, (err, client) => {
-        let db = client.db('books');
+        let db = client.db('personal-library');
         db.collection('books')
         .find({})
         .toArray((err, docs) => {
