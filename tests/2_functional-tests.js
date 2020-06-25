@@ -37,10 +37,19 @@ suite('Functional Tests', function() {
 
   suite('Routing tests', function() {
 
+    let id;
 
     suite('POST /api/books with title => create book object/expect book object', function() {
       
       test('Test POST /api/books with title', function(done) {
+        chai.request(server)
+        .post('api/books')
+        .send({title: 'mastery'})
+        .end((err, res)=> {
+          assert.equal(res.status, 200);
+          assert.equal(res.body.title, 'mastery');
+          done();
+        })
         //done();
       });
       
